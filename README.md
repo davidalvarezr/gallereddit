@@ -10,11 +10,8 @@ An app that shows subreddits in a gallery
 - OAuth authentication, the user of the app does not need a reddit account
   - Each time a request is made, the validity of the token is checked. If it doesn't exist or is not valid, the app first authenticate to get a new token.
 
-<img src="./no_code/screenshots/gallery.jpg" alt="gallery"
-​	title="The gallery" height="250" />
+![gallery](https://i.imgur.com/NsxvLt1.jpg =250x) ![one_image](https://i.imgur.com/Wugeca4.jpg =250x)
 
-<img src="./no_code/screenshots/one_image.jpg" alt="gallery"
-​	title="The gallery" height="250" />
 
 ## How to use it ?
 
@@ -74,18 +71,18 @@ The app uses cordova features such as `HTTP` because `HttpClient` was causing CO
 
 ## TODO's
 
-[ ] Setting to enable/disable NSFW subreddits
+- [ ] Setting to enable/disable NSFW subreddits
 
-[ ] Setting to choose the size of the gallery
+- [ ] Setting to choose the size of the gallery
 
-[ ] Zoom feature in the gallery
+- [ ] Zoom feature in the gallery
 
-[ ] Enhance the way one picture is shown
+- [ ] Enhance the way one picture is shown
 
-​	[ ] Add the link to access the post
+  - [ ] Add the link to access the post
 
-​	[ ] Show comments
+  - [ ] Show comments
 
-[ ] Connect with an account and show a list of subreddits accordingly
+- [ ] Connect with an account and show a list of subreddits accordingly
 
-[ ] Comment code functions
+- [ ] Comment code functions
