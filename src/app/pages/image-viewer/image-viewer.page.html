@@ -1,0 +1,15 @@
+<ion-grid>
+    <ion-row justify-content-center align-items-start>
+        <ion-text>{{ mediaTitle }}</ion-text>
+    </ion-row>
+    <ion-row justify-content-center align-items-center>
+        <ion-img
+            src='{{ mediaUrl }}'
+        ></ion-img>
+    </ion-row>
+    <ion-row justify-content-center align-items-end>
+        <ion-button [routerLink]="['/gallery']">
+            BACK
+        </ion-button>
+    </ion-row>  
+</ion-grid>

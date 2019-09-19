@@ -1,0 +1,21 @@
+ion-col > div {
+    text-align: center;
+    background-color: #f7f7f7;
+    border: solid 1px #ddd;
+    padding: 10px;
+    height: 100px;
+}
+
+ion-col > div:active {
+    border: solid 1px black
+}
+
+ion-grid {
+    padding: 5px;
+}
+
+ion-col {
+    // --ion-grid-column-padding: 20;
+    //--ion-grid-column-padding-xl: 1;
+    padding: 2px;
+}

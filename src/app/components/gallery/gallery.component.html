@@ -1,0 +1,26 @@
+<ion-grid>
+    <ion-row>
+        <ion-col 
+            *ngFor="let media of redditService.mediaList"
+            size-xs="4"
+            size-sm="2"
+            size-md="2"
+            size-lg="1"
+        >
+            
+            <div 
+                [ngStyle]="{
+                    backgroundImage: 'url(' + media.thumbUrl + ')',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'cover'
+                }"
+                [routerLink]="['/image-viewer', media.mediaUrl, media.title ]">
+            </div>
+
+        </ion-col>
+    </ion-row>
+</ion-grid>
+
+<ion-infinite-scroll (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+</ion-infinite-scroll>

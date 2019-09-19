@@ -1,5 +1,17 @@
 {
-  "name": "gallereddit",
-  "integrations": {},
-  "type": "angular"
+    "name": "gallereddit",
+    "integrations": {
+        "cordova": {}
+    },
+    "type": "angular",
+    "proxies": [
+        {
+            "path": "/reddit",
+            "proxyUrl": "https://www.reddit.com/api/v1/access_token"
+        },
+        {
+            "path": "/reddit-oauth",
+            "proxyUrl": "https://www.oauth.reddit.com"
+        }
+    ]
 }

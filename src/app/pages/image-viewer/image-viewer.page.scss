@@ -1,0 +1,20 @@
+ion-img {
+    object-fit: contain;
+}
+
+ion-text {
+    text-align: center;
+}
+
+ion-grid {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    // border: solid 1px purple;
+    justify-content: center;
+    align-content: center;
+}
+
+ion-row {
+    // border: solid 1px green;
+}
