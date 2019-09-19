@@ -8,7 +8,7 @@ import { LoadingController } from '@ionic/angular';
 import { ResolveEnd } from '@angular/router';
 
 const TIME_OF_VALIDITY = 3600000;
-const OVER_18 = true;
+const OVER_18 = false;
 const LIMIT = 25;
 const ACCESS_TOKEN_ROUTE = 'https://www.reddit.com/api/v1/access_token';
 const GRANT_TYPE_ROUTE = 'https://oauth.reddit.com/grants/installed_client';

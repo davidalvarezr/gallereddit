@@ -1,15 +1,26 @@
 <ion-grid>
-    <ion-row justify-content-center align-items-start>
+    <ion-row class="ion-justify-content-center ion-align-items-start">
         <ion-text>{{ mediaTitle }}</ion-text>
     </ion-row>
-    <ion-row justify-content-center align-items-center>
+    <ion-row class="ion-justify-content-center ion-align-items-start">
         <ion-img
             src='{{ mediaUrl }}'
         ></ion-img>
+        
+        
+
     </ion-row>
-    <ion-row justify-content-center align-items-end>
+    <ion-row class="ion-justify-content-center ion-align-items-end">
         <ion-button [routerLink]="['/gallery']">
             BACK
         </ion-button>
     </ion-row>  
 </ion-grid>
+<!-- <ion-content>
+    <video 
+        autoplay 
+        loop 
+        src="https://external-preview.redd.it/2npILg37qAvwmhr-FP_qlWQjCcdXmqiIHUR_Hhlhgj4.gif?format=mp4&s=148fea71ba7fcd5393386b82c5f8a354210f5faa"
+    ></video>
+</ion-content> -->
+  

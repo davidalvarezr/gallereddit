@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+
 @Component({
   selector: 'app-image-viewer',
   templateUrl: './image-viewer.page.html',
@@ -10,6 +11,7 @@ export class ImageViewerPage implements OnInit {
 
     mediaUrl: string;
     mediaTitle: string;
+    // vgMedia: VgMedia;
 
     constructor(private activatedRoute: ActivatedRoute) { }
 
@@ -17,5 +19,4 @@ export class ImageViewerPage implements OnInit {
         this.mediaUrl = this.activatedRoute.snapshot.paramMap.get('url');
         this.mediaTitle = this.activatedRoute.snapshot.paramMap.get('title');
     }
-
 }

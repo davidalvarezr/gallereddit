@@ -8,15 +8,28 @@
             size-lg="1"
         >
             
-            <div 
+            <div *ngIf="media.type === 'img'"
                 [ngStyle]="{
-                    backgroundImage: 'url(' + media.thumbUrl + ')',
+                    backgroundImage: 'url(' + media.staticThumbUrl + ')',
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'cover'
                 }"
                 [routerLink]="['/image-viewer', media.mediaUrl, media.title ]">
             </div>
 
+            <!-- <div id="video-container" *ngIf="media.type === 'gif'">
+                <video 
+                    autoplay 
+                    loop 
+                    src="{{ media.mp4ThumbUrl }}"
+                    poster="{{ media.staticThumbUrl }}"
+                ></video>
+            </div> -->
+            
+            <div class="video-container" *ngIf="media.type === 'gif'">
+                <img class="cover" src="{{ media.staticThumbUrl }}">
+                <img class="overlay" src="https://cdn3.iconfinder.com/data/icons/seo-marketing-2-1/48/56-512.png">
+            </div>
         </ion-col>
     </ion-row>
 </ion-grid>
