@@ -71,9 +71,9 @@ The app uses cordova features such as `HTTP` because `HttpClient` was causing CO
 
 ## TODO's
 
-- [ ] Setting to enable/disable NSFW subreddits
+- [x] Setting to enable/disable NSFW subreddits
 
-- [ ] Setting to choose the size of the gallery
+- [x] Setting to choose the size of the gallery
 
 - [ ] Zoom feature in the gallery
 
