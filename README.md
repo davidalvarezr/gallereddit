@@ -10,8 +10,7 @@ An app that shows subreddits in a gallery
 - OAuth authentication, the user of the app does not need a reddit account
   - Each time a request is made, the validity of the token is checked. If it doesn't exist or is not valid, the app first authenticate to get a new token.
 
-![gallery](https://i.imgur.com/NsxvLt1.jpg =250x) ![one_image](https://i.imgur.com/Wugeca4.jpg =250x)
-
+<img src="https://i.imgur.com/NsxvLt1.jpg" alt="gallery" width="250"/> <img src="https://i.imgur.com/Wugeca4.jpg" alt="one_image" width="250"/>
 
 ## How to use it ?
 
