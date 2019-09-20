@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { GalleryPage } from './gallery.page';
 import { GalleryComponent } from 'src/app/components/gallery/gallery.component';
 import { SubListComponent } from 'src/app/components/sub-list/sub-list.component';
+import { DrawerComponent } from 'src/app/components/menus/drawer/drawer.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,11 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
   ],
-  declarations: [GalleryPage, GalleryComponent, SubListComponent]
+  declarations: [
+        GalleryPage,
+        GalleryComponent,
+        SubListComponent,
+        DrawerComponent,
+    ]
 })
 export class GalleryPageModule {}

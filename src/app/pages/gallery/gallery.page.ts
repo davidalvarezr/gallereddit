@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RedditService } from 'src/app/services/reddit.service';
-import { Media } from 'src/app/components/gallery/Media';
-import { LoadingController } from '@ionic/angular';
+import {  MenuController } from '@ionic/angular';
 
 
 @Component({
@@ -17,7 +16,8 @@ export class GalleryPage implements OnInit {
 
 
     constructor(
-        public redditService: RedditService
+        public redditService: RedditService,
+        private menuController: MenuController,
     ) {
         this.contentToShow = 'gallery';
     }

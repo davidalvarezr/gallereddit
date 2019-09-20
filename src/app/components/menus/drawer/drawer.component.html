@@ -1,0 +1,19 @@
+<ion-menu side="start" menuId="first" content-id="content">
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content id="content">
+      <ion-list>
+
+            <ion-item [routerLink]="['/settings']" >
+                <ion-label>
+                    Settings
+                </ion-label>
+                <ion-icon name="settings" slot="end"></ion-icon>
+            </ion-item> 
+
+      </ion-list>
+    </ion-content>
+</ion-menu>

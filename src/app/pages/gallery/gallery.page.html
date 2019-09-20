@@ -1,23 +1,29 @@
+<app-drawer></app-drawer>
 <ion-header>
     <ion-toolbar>
-      <ion-title slot=start>{{ title ? title : "Gallery" }}</ion-title>
-      <ion-searchbar slot="end"
-        [(ngModel)]="searchTerm" 
-        (ionChange)="searchSubs()"
-        (ionFocus)="putSubList()"
-        debounce=700
-    ></ion-searchbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title slot=start>{{ title ? title : "Gallery" }}</ion-title>
     </ion-toolbar>
-  </ion-header>
-  
-  <ion-content>
+</ion-header>
+<ion-content>    
     <div [ngSwitch]="contentToShow">
+
+        <ion-searchbar slot="end"
+            [(ngModel)]="searchTerm" 
+            (ionChange)="searchSubs()"
+            (ionFocus)="putSubList()"
+            debounce=700
+        ></ion-searchbar> 
+        
         <app-gallery *ngSwitchCase="'gallery'"></app-gallery>
-        <app-sub-list 
-            *ngSwitchCase="'sub_list'"
-            [subList]="redditService.subFound"
-            (contentToShow)="onContentToShowSublistChanged($event)"
-        ></app-sub-list>
+            <app-sub-list 
+                *ngSwitchCase="'sub_list'"
+                [subList]="redditService.subFound"
+                (contentToShow)="onContentToShowSublistChanged($event)"
+            ></app-sub-list>
+
     </div>
-  </ion-content>
+</ion-content>
   
