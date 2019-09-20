@@ -12,10 +12,6 @@
         <ion-icon name="resize" slot="start"></ion-icon>
         <ion-label position="floating">Gallery size</ion-label>
         <ion-select [(ngModel)]="gallerySize" (ionChange)="setGallerySize()">
-            <!-- <ion-select-option 
-                *ngFor="let option of gallerySizeOption"
-                value="option"
-            ></ion-select-option> -->
             <ion-select-option value="small">small</ion-select-option>
             <ion-select-option value="medium">medium</ion-select-option>
         </ion-select>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-drawer',
@@ -7,8 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DrawerComponent implements OnInit {
 
-  constructor() { }
+    constructor(private menuController: MenuController) { }
 
-  ngOnInit() {}
+    ngOnInit() {}
 
+    onClickItem() {
+        this.menuController.close();
+    }
 }

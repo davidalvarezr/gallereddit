@@ -6,9 +6,9 @@ import { Media } from '../components/gallery/Media';
 import { MediaType } from '../components/gallery/MediaType';
 import { LoadingController } from '@ionic/angular';
 import { ResolveEnd } from '@angular/router';
+import { SettingsService } from './settings.service';
 
 const TIME_OF_VALIDITY = 3600000;
-const OVER_18 = true;
 const LIMIT = 25;
 const ACCESS_TOKEN_ROUTE = 'https://www.reddit.com/api/v1/access_token';
 const GRANT_TYPE_ROUTE = 'https://oauth.reddit.com/grants/installed_client';
@@ -36,7 +36,8 @@ export class RedditService {
     constructor(
         private http: HTTP,
         private uniqueDeviceID: UniqueDeviceID,
-        public loadingController: LoadingController
+        public loadingController: LoadingController,
+        private settings: SettingsService
     ) {
         this.timeBeforeRefreshing = 0;
         this.needNewToken = true;
@@ -102,10 +103,11 @@ export class RedditService {
     async searchSubs(query = null) {
         try {
             await this.checkToken();
+            const over18 = await this.settings.getNsfwSub();
 
             const body = {
                 exact: false,
-                include_over_18: OVER_18,
+                include_over_18: over18,
                 include_advertisable: true,
                 query,
             };
