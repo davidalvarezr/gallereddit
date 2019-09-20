@@ -37,11 +37,8 @@ export class GalleryPage implements OnInit, OnDestroy {
 
 
     private onSettingNsfwValueChanged(nsfw: boolean) {
-        // console.log('GalleryPage Receiving notification');
-        if (!nsfw) {
-            // delete search term
-            this.searchTerm = '';
-        }
+        // console.log('GalleryPage Receiving notification : NSFW : ' + nsfw);
+        this.searchSubs();
     }
 
     public searchSubs() {
