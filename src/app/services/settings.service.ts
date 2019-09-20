@@ -27,7 +27,7 @@ export class SettingsService {
 
     async setNsfwSub(val: boolean): Promise<any> {
         const newNsfwSubVal = await this.set('show-nsfw-sub', val);
-        console.log(`Emitting an event from setNsfwSub`);
+        // console.log(`Emitting an event from setNsfwSub`);
         this.events.notifyNsfwHasChanged(newNsfwSubVal);
         return newNsfwSubVal;
     }
@@ -38,7 +38,10 @@ export class SettingsService {
     }
 
     async setGallerySize(val: 'small' | 'medium'): Promise<any> {
-        return await this.set('gallery-size', val);
+        const newGallerySize = await this.set('gallery-size', val);
+        console.log(`Emitting an event from setGallerySize`);
+        this.events.notifyGallerySizeHasChanged(newGallerySize);
+        return newGallerySize;
     }
     async getGallerySize(): Promise<any> {
         const gallerySize = await this.get('gallery-size');

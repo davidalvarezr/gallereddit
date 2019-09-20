@@ -1,6 +1,6 @@
-<ion-grid>
+<ion-grid *ngIf="gallerySize==='small'">
     <ion-row>
-        <ion-col 
+        <ion-col
             *ngFor="let media of redditService.mediaList"
             size-xs="4"
             size-sm="2"
@@ -12,7 +12,8 @@
                 [ngStyle]="{
                     backgroundImage: 'url(' + media.thumbUrl + ')',
                     backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'cover'
+                    backgroundSize: 'cover',
+                    height: '100px'
                 }"
                 [routerLink]="['/image-viewer', media.mediaUrl, media.title ]">
             </div>
@@ -20,6 +21,30 @@
         </ion-col>
     </ion-row>
 </ion-grid>
+
+<ion-grid *ngIf="gallerySize==='medium'">
+        <ion-row>
+            <ion-col
+                *ngFor="let media of redditService.mediaList"
+                size-xs="6"
+                size-sm="4"
+                size-md="3"
+                size-lg="2"
+            >
+                
+                <div 
+                    [ngStyle]="{
+                        backgroundImage: 'url(' + media.thumbUrl + ')',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: 'cover',
+                        height: '150px'
+                    }"
+                    [routerLink]="['/image-viewer', media.mediaUrl, media.title ]">
+                </div>
+    
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 
 <ion-infinite-scroll (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
