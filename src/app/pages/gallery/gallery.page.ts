@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { RedditService } from 'src/app/services/reddit.service';
-import {  MenuController } from '@ionic/angular';
+import { EventsService } from 'src/app/services/events.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -8,21 +9,39 @@ import {  MenuController } from '@ionic/angular';
   templateUrl: './gallery.page.html',
   styleUrls: ['./gallery.page.scss']
 })
-export class GalleryPage implements OnInit {
+export class GalleryPage implements OnInit, OnDestroy {
 
-    public searchTerm: string;
-    public title: string;
-    public contentToShow: string; // gallery | sub_list
+    private nsfwSubscription: Subscription;
+
+    searchTerm: string;
+    title: string;
+    contentToShow: string; // gallery | sub_list
 
 
     constructor(
         public redditService: RedditService,
-        private menuController: MenuController,
+        private events: EventsService,
     ) {
         this.contentToShow = 'gallery';
     }
 
     ngOnInit() {
+        console.log(`GalleryPage initialized`);
+        this.nsfwSubscription = this.events.nsfwObservable().subscribe((nsfw) => {
+            this.onSettingNsfwValueChanged(nsfw);
+        });
+    }
+    ngOnDestroy() {
+        this.nsfwSubscription.unsubscribe();
+    }
+
+
+    private onSettingNsfwValueChanged(nsfw: boolean) {
+        // console.log('GalleryPage Receiving notification');
+        if (!nsfw) {
+            // delete search term
+            this.searchTerm = '';
+        }
     }
 
     public searchSubs() {

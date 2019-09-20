@@ -14,9 +14,7 @@ export class SettingsComponent implements OnInit {
     constructor(private settings: SettingsService) { }
 
     ngOnInit() {
-        this.getSettings().then(() => {
-            console.log('Gallery size: ' + this.gallerySize);
-        });
+        this.getSettings();
     }
 
     private async getSettings() {

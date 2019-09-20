@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import { EventsService } from './events.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService {
 
-    constructor(private storage: Storage) {}
+    constructor(private storage: Storage, private events: EventsService) {}
 
 
     private async set(key: string, val: any): Promise<any> {
@@ -25,10 +26,13 @@ export class SettingsService {
     }
 
     async setNsfwSub(val: boolean): Promise<any> {
-        return await this.set('show-nsfw-sub', val);
+        const newNsfwSubVal = await this.set('show-nsfw-sub', val);
+        console.log(`Emitting an event from setNsfwSub`);
+        this.events.notifyNsfwHasChanged(newNsfwSubVal);
+        return newNsfwSubVal;
     }
 
-    async getNsfwSub(): Promise<any> {
+    async getNsfwSub(): Promise<boolean> {
         const showNsfwSub = await this.get('show-nsfw-sub');
         return showNsfwSub ? showNsfwSub : false;
     }

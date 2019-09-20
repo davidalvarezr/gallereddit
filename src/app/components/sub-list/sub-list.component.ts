@@ -1,24 +1,46 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { RedditService } from 'src/app/services/reddit.service';
+import { Observable, Subscription } from 'rxjs';
+import { EventsService } from 'src/app/services/events.service';
 
 @Component({
   selector: 'app-sub-list',
   templateUrl: './sub-list.component.html',
   styleUrls: ['./sub-list.component.scss'],
 })
-export class SubListComponent implements OnInit {
+export class SubListComponent implements OnInit, OnDestroy {
     @Input() subList: string[];
-
     @Output() contentToShow = new EventEmitter<string[]>();
 
-    constructor(private redditService: RedditService) {
+    nsfwSubscription: Subscription;
+
+    constructor(private redditService: RedditService, private events: EventsService) {
         this.subList = [];
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        console.log(`SubListComponent initialized`);
+        this.nsfwSubscription = this.events.nsfwObservable().subscribe((nsfw) => {
+            this.onSettingNsfwValueChanged(nsfw);
+        });
+    }
+    ngOnDestroy() {
+        this.nsfwSubscription.unsubscribe();
+    }
 
-    public putGallery(sub) {
+
+    private onSettingNsfwValueChanged(nsfw: boolean) {
+        // console.log('SubListComponent Receiving notification');
+        if (!nsfw) {
+            // delete text in search bar
+            this.subList = [];
+        }
+    }
+
+
+    putGallery(sub) {
         this.redditService.resetMediaList();
         this.contentToShow.emit(['gallery', sub]);
     }
+
 }
