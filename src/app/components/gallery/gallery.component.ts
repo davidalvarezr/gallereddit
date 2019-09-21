@@ -68,4 +68,9 @@ export class GalleryComponent implements OnInit, OnDestroy {
         console.log('Gallery size has changed');
         this.gallerySize = newGallerySize;
     }
+
+    thumbClick(media: Media) {
+        console.log(media.mediaUrl);
+        console.log(media.type);
+    }
 }

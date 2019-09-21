@@ -10,6 +10,7 @@ export class SettingsComponent implements OnInit {
 
     public nsfwSub: boolean;
     public gallerySize: 'small' | 'medium';
+    public muted: boolean;
 
     constructor(private settings: SettingsService) { }
 
@@ -18,8 +19,11 @@ export class SettingsComponent implements OnInit {
     }
 
     private async getSettings() {
-        this.nsfwSub = await this.settings.getNsfwSub();
-        this.gallerySize = await this.settings.getGallerySize();
+        [this.nsfwSub, this.gallerySize, this.muted] = await Promise.all([
+            this.settings.getNsfwSub(),
+            this.settings.getGallerySize(),
+            this.settings.getMuted()
+        ]);
     }
 
     async setNsfwSub() {
@@ -28,5 +32,9 @@ export class SettingsComponent implements OnInit {
 
     async setGallerySize() {
         this.gallerySize = await this.settings.setGallerySize(this.gallerySize);
+    }
+
+    async changeMuted() {
+        this.muted = await this.settings.setMuted(this.muted);
     }
 }

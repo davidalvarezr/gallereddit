@@ -5,6 +5,21 @@
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title slot=start>{{ title ? title : "Gallery" }}</ion-title>
+        <!-- hour, day, week, month, year, all -->
+        <ion-select *ngIf="sort=='top'" [(ngModel)]="sortTime" (ionChange)="changeSortTime()" slot="end" interface="popover">
+            <ion-select-option value="hour">hour</ion-select-option>
+            <ion-select-option value="day">day</ion-select-option>
+            <ion-select-option value="week">week</ion-select-option>
+            <ion-select-option value="month">month</ion-select-option>
+            <ion-select-option value="year">year</ion-select-option>
+            <ion-select-option value="all">all</ion-select-option>
+        </ion-select>
+        <ion-select [(ngModel)]="sort" (ionChange)="changeSort()" slot="end" interface="popover">
+            <ion-select-option value="best">best</ion-select-option>
+            <ion-select-option value="hot">hot</ion-select-option>
+            <ion-select-option value="new">new</ion-select-option>
+            <ion-select-option value="top">top</ion-select-option>
+        </ion-select>
     </ion-toolbar>
 </ion-header>
 <ion-content>    

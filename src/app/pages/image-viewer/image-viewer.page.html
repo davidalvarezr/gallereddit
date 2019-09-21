@@ -1,13 +1,32 @@
 <ion-grid>
-    <ion-row justify-content-center align-items-start>
+    <ion-row class="ion-justify-content-center ion-align-items-start">
         <ion-text>{{ mediaTitle }}</ion-text>
     </ion-row>
-    <ion-row justify-content-center align-items-center>
+    
+    <ion-row class="ion-justify-content-center ion-align-items-start" *ngIf="mediaType!=='2'">
+        
         <ion-img
             src='{{ mediaUrl }}'
         ></ion-img>
+
     </ion-row>
-    <ion-row justify-content-center align-items-end>
+    
+    <ion-row class="ion-justify-content-center ion-align-items-start" *ngIf="mediaType==='2'">
+  
+        <!-- FIXME: `playsinline` for iOS ? -->
+        <video 
+            id="video"
+            [muted]="muted"
+            preload="auto" 
+            autoplay
+            loop 
+            src="{{ mediaUrl }}"
+            [ngStyle]="{maxWidth: '100%'}"
+        ></video>
+
+    </ion-row>
+
+    <ion-row class="ion-justify-content-center ion-align-items-start">
         <ion-button [routerLink]="['/gallery']">
             BACK
         </ion-button>

@@ -10,7 +10,12 @@ export class EventsService {
     private nsfw = new Subject<boolean>();
     private gallerySize = new Subject<'small'|'medium'>();
 
+    private sort = new Subject<string>();
+    private sortTime = new Subject<string>();
+
     constructor() {}
+
+    // NSFW
 
     notifyNsfwHasChanged(nsfw: boolean) {
         this.nsfw.next(nsfw);
@@ -19,6 +24,8 @@ export class EventsService {
         return this.nsfw.asObservable();
     }
 
+    // GALLERY SIZE
+
     notifyGallerySizeHasChanged(gallerySize: 'small'|'medium') {
         this.gallerySize.next(gallerySize);
     }
@@ -26,4 +33,21 @@ export class EventsService {
         return this.gallerySize.asObservable();
     }
 
+    // SORT
+
+    notifySortHasChanged(sort: string) {
+        this.sort.next(sort);
+    }
+    sortObservable(): Observable<string> {
+        return this.sort.asObservable();
+    }
+
+    // SORT TIME
+
+    notifySortTimeHasChanged(sortTime: string) {
+        this.sortTime.next(sortTime);
+    }
+    sortTimeObservable(): Observable<string> {
+        return this.sortTime.asObservable();
+    }
 }

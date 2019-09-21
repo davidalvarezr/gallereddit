@@ -1,6 +1,6 @@
 <ion-list>
         
-    <ion-item [routerLink]="['/settings']" >
+    <ion-item>
         <ion-icon name="warning" slot="start"></ion-icon>
         <ion-label>
             NSFW
@@ -11,10 +11,18 @@
     <ion-item>
         <ion-icon name="resize" slot="start"></ion-icon>
         <ion-label position="floating">Gallery size</ion-label>
-        <ion-select [(ngModel)]="gallerySize" (ionChange)="setGallerySize()">
+        <ion-select [(ngModel)]="gallerySize" (ionChange)="setGallerySize()" interface="popover">
             <ion-select-option value="small">small</ion-select-option>
             <ion-select-option value="medium">medium</ion-select-option>
         </ion-select>
+    </ion-item>
+
+    <ion-item>
+        <ion-icon name="volume-mute" slot="start"></ion-icon>
+        <ion-label>
+            Videos are muted
+        </ion-label>
+        <ion-toggle [(ngModel)]="muted" (ionChange)="changeMuted()"></ion-toggle>
     </ion-item>
 
 </ion-list>

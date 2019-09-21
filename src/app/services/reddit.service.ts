@@ -7,6 +7,7 @@ import { MediaType } from '../components/gallery/MediaType';
 import { LoadingController } from '@ionic/angular';
 import { ResolveEnd } from '@angular/router';
 import { SettingsService } from './settings.service';
+import { SortService } from './sort.service';
 
 const TIME_OF_VALIDITY = 3600000;
 const LIMIT = 25;
@@ -37,7 +38,8 @@ export class RedditService {
         private http: HTTP,
         private uniqueDeviceID: UniqueDeviceID,
         public loadingController: LoadingController,
-        private settings: SettingsService
+        private settings: SettingsService,
+        private sort: SortService
     ) {
         this.timeBeforeRefreshing = 0;
         this.needNewToken = true;
@@ -160,53 +162,62 @@ export class RedditService {
         }
     }
 
-    getThumbnails(): Promise<any> {
-        console.log(`POST: ${SUB_ROUTE}/r/${this.currentSub}/hot?raw_json=1&after=${this.after}`);
-        return new Promise((resolve, reject) => {
+    async getThumbnails(): Promise<any> {
+        try {
             if (this.firstRefresh) {
                 this.showLoader();
             }
-            const endpoint = `${SUB_ROUTE}/r/${this.currentSub}/hot?raw_json=1`;
+
+            const [sort, sortTime] = await Promise.all([
+                this.sort.getSort(),
+                this.sort.getSortTime()
+            ]);
+
+            const endpoint = `${SUB_ROUTE}/r/${this.currentSub}/${sort}?raw_json=1`;
+            console.log(`${endpoint}&after=${this.after}`);
             const body = {
+                t: `${sortTime}`,
                 limit: `${LIMIT}`,
                 count: `${this.count}`,
                 after: `${this.after}`,
             };
             const auth = {Authorization: `Bearer ${this.token}`};
 
-            this.http.get(endpoint, body, auth)
-                .then((res) => {
-                    if (this.firstRefresh) {
-                        this.hideLoader();
-                    }
-                    const parsedData = JSON.parse(res.data);
-                    const posts = parsedData.data.children;
-                    // console.log(`ALL POSTS: ${JSON.stringify(posts)}`);
-                    posts.forEach((post, index) => {
-                        const media = Media.fromJSON(post);
-                        // console.log(`post ${index}: ${JSON.stringify(post)}`);
-                        if (media) {
-                            this.mediaList.push(media);
-                        }
-                    });
-                    this.count += LIMIT;
-                    this.after = parsedData.data.after;
-                    resolve();
-                })
-                .catch(err => {
-                    console.log(err);
-                    reject(err);
-                });
+            const res = await this.http.get(endpoint, body, auth);
+            if (this.firstRefresh) {
+                this.hideLoader();
+            }
+            const parsedData = JSON.parse(res.data);
+            const posts = parsedData.data.children;
+                // console.log(`ALL POSTS: ${JSON.stringify(posts)}`);
+            posts.forEach((post, index) => {
+                const media = post.data.hasOwnProperty('crosspost_parent_list')
+                    ? Media.fromJSON(post.data.crosspost_parent_list[0])
+                    : Media.fromJSON(post.data);
+                // console.log(`post ${index}: ${JSON.stringify(post)}`);
+                if (media) {
+                    this.mediaList.push(media);
+                }
             });
+            this.count += LIMIT;
+            this.after = parsedData.data.after;
+            return;
+        } catch (err) {
+            return err;
+        }
     }
 
     loadMoreThumbnails(): Promise<number> {
         return new Promise(async (resolve, reject) => {
-            const length = this.mediaList.length;
-            while (this.mediaList.length < length + LIMIT && this.after !== null) {
-                await this.getThumbnails();
+            if (this.currentSub) {
+                const length = this.mediaList.length;
+                while (this.mediaList.length < length + LIMIT && this.after !== null) {
+                    await this.getThumbnails();
+                }
+                resolve(this.after === null ? -1 : 0);
+            } else {
+                resolve(-1);
             }
-            resolve(this.after === null ? -1 : 0);
         });
     }
 

@@ -15,7 +15,8 @@
                     backgroundSize: 'cover',
                     height: '100px'
                 }"
-                [routerLink]="['/image-viewer', media.mediaUrl, media.title ]">
+                [routerLink]="['/image-viewer', media.mediaUrl, media.title, media.type ]"
+                (click)="thumbClick(media)">
             </div>
 
         </ion-col>

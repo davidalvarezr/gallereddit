@@ -1,4 +1,5 @@
 export enum MediaType {
     img,
-    gif
+    gif,
+    gfycat
 }
