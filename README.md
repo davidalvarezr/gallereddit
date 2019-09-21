@@ -77,6 +77,8 @@ The app uses cordova features such as `HTTP` because `HttpClient` was causing CO
 - [x] Setting to mute video
 
 - [x] Filters: hot, new, best, top (hour, day, week, month, year, all)
+  
+  - [ ] Adapt padding right
 
 - [ ] Zoom feature in the gallery
 
