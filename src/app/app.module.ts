@@ -17,15 +17,18 @@ import { environment } from '../environments/environment'; // Angular CLI enviro
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 // import devToolsEnhancer from 'remote-redux-devtools';
 import { StoreRouterConnectingModule, routerReducer } from '@ngrx/router-store';
+import { LoggerService } from './services/logger.service';
 
 
 // console.log all actions
 export function debug(reducer: ActionReducer<any>): ActionReducer<any> {
+    const logger = new LoggerService();
     return (state, action) => {
-      console.log('state', state);
-      console.log('action', action);
 
-      return reducer(state, action);
+        logger.storeInfo('ACTION', action);
+        logger.storeInfo('STATE', state);
+
+        return reducer(state, action);
     };
   }
 
