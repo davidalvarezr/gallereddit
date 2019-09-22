@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { RedditService } from 'src/app/services/reddit.service';
 import { EventsService } from 'src/app/services/events.service';
 import { Subscription } from 'rxjs';
 import { SortService } from 'src/app/services/sort.service';
+import { DrawerComponent } from 'src/app/components/menus/drawer/drawer.component';
 
 
 @Component({
@@ -21,6 +22,8 @@ export class GalleryPage implements OnInit, OnDestroy {
     contentToShow: string; // gallery | sub_list
     sort: string;
     sortTime: string;
+
+    @ViewChild(DrawerComponent, { static: false }) menu: DrawerComponent;
 
     constructor(
         public redditService: RedditService,
@@ -102,4 +105,5 @@ export class GalleryPage implements OnInit, OnDestroy {
         this.redditService.loadMoreThumbnails();
         this.events.notifySortTimeHasChanged(this.sortTime);
     }
+
 }

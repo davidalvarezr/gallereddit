@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, IonMenu } from '@ionic/angular';
 
 import { GalleryPage } from './gallery.page';
 import { GalleryComponent } from 'src/app/components/gallery/gallery.component';
