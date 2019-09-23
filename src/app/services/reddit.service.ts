@@ -181,6 +181,11 @@ export class RedditService {
 
     async getThumbnails(): Promise<any> {
         try {
+
+            if (this.currentSub === undefined) {
+                return;
+            }
+
             if (this.firstRefresh) {
                 this.showLoader();
             }
@@ -240,6 +245,7 @@ export class RedditService {
     async showLoader() {
         this.loader = await this.loadingController.create({
             message: 'Fetching images from ' + this.currentSub,
+            backdropDismiss: true,
           });
         await this.loader.present();
         const onDismiss = await this.loader.onDidDismiss();
