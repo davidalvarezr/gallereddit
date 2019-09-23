@@ -11,7 +11,7 @@ import { SortService } from './sort.service';
 import { LoggerService } from './logger.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../app.state';
-import { Preferences, Sort } from '../models/ngx-store/Preferences.model';
+import { PreferencesReducerState, Sort } from '../models/ngx-store/Preferences.model';
 import { Settings } from '../models/ngx-store/Settings.model';
 
 const TIME_OF_VALIDITY = 3600000;
@@ -76,7 +76,7 @@ export class RedditService {
         //     this.logger.log(`Current subreddit: ${this.currentSub}`);
         // }, 20000);
 
-        this.store.select('preferences').subscribe((state: Preferences) => {
+        this.store.select('preferences').subscribe((state: PreferencesReducerState) => {
             if (state !== null && state !== undefined) {
                 // this.nsfwSub = state.settings.nsfw;
                 // this.gallerySize = state.settings.gallerySize;

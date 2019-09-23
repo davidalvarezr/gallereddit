@@ -1,3 +1,3 @@
-export interface Layout {
+export interface LayoutReducerState {
     menuOpen: boolean;
 }

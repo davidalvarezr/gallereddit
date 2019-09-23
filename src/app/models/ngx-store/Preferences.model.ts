@@ -7,7 +7,7 @@ export interface Sort {
     sortTime: SortTime;
 }
 
-export interface Preferences {
+export interface PreferencesReducerState {
     settings: Settings;
     sort: Sort;
 }

@@ -3,7 +3,7 @@ import { MenuController, IonMenu } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { AppState } from 'src/app/app.state';
-import { Layout } from 'src/app/models/ngx-store/Layout.model';
+import { LayoutReducerState } from 'src/app/models/ngx-store/Layout.model';
 import * as LayoutActions from '../../../ngx-store/actions/layout.action';
 
 

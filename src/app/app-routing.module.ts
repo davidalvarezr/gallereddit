@@ -6,6 +6,7 @@ const routes: Routes = [
   { path: 'gallery', loadChildren: './pages/gallery/gallery.module#GalleryPageModule' },
   { path: 'image-viewer/:url/:title/:type', loadChildren: './pages/image-viewer/image-viewer.module#ImageViewerPageModule' },
   { path: 'settings', loadChildren: './pages/settings/settings.module#SettingsPageModule' },
+  { path: 'logs', loadChildren: './pages/logs/logs.module#LogsPageModule' },
 ];
 
 @NgModule({

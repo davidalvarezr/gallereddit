@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -12,7 +12,7 @@ import { AppInit } from './ngx-store/actions/app.action';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
     constructor(
         private store: Store<AppState>,
         private storage: Storage,
@@ -24,18 +24,22 @@ export class AppComponent {
     }
 
     initializeApp() {
+        this.platform.ready().then(() => {
+        this.statusBar.styleDefault();
+        this.splashScreen.hide();
+        });
+    }
+
+    ngOnInit() {
         this.storage.get('state').then((stringState) => {
             const state = JSON.parse(stringState);
             this.store.dispatch(new AppInit(state));
         });
         this.store.subscribe((state) => {
             const stringState = JSON.stringify(state);
-            this.storage.set('state', stringState);
-        });
-
-        this.platform.ready().then(() => {
-        this.statusBar.styleDefault();
-        this.splashScreen.hide();
+            this.storage.set('state', stringState).then(() => {
+                console.log('STATE PUT IN LOCAL STORAGE');
+            });
         });
     }
 }

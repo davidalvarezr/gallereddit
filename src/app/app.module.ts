@@ -19,62 +19,40 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreRouterConnectingModule, routerReducer } from '@ngrx/router-store';
 import { LoggerService } from './services/logger.service';
 import { preferencesReducer } from './ngx-store/reducers/preferences.reducer';
+import { debugReducer } from './ngx-store/reducers/debug.reducer';
+import { LoggerServiceComponent } from './components/logger-service/logger-service.component';
+import { AppState, Actions } from './app.state';
+
 
 const localStorageConfig: StorageConfig = {
     name: '__mydb',
     driverOrder: ['indexeddb', 'sqlite', 'websql']
 };
 
-const initState = {
-    layout: layoutReducer,
-    preferences: preferencesReducer,
-    router: routerReducer,
-};
-
-function appReducer(state = initState, action: Action) {
-    console.log('INSIDE MAIN REDUCER');
-    return state;
-}
-
 const reducers = {
     layout: layoutReducer,
     preferences: preferencesReducer,
     router: routerReducer,
+    debug: debugReducer,
 };
 
-// console.log all actions
-export function debug(reducer: ActionReducer<any>): ActionReducer<any> {
-    const logger = new LoggerService();
+// FIXME:
+/**
+ * console.log action and state(before action) each time an action is dipatched
+ * @param reducer reducer
+ */
+export function debug(reducer: ActionReducer<AppState, Actions>): ActionReducer<AppState, Actions> {
+
+    // const logger = new LoggerService(); // ERROR [1]
+
     return (state, action) => {
 
-        logger.storeInfo('ACTION', action);
-        logger.storeInfo('STATE', state);
+        // logger.storeInfo('ACTION', action);
+        // logger.storeInfo('STATE', state);
 
         return reducer(state, action);
     };
 }
-
-export function storeReplacer(reducer: ActionReducer<any>): ActionReducer<any> {
-
-    return (state, action) => {
-        return reducer(state, action);
-    };
-}
-
-// TODO: create meta reducer to save preferences in local storage
-// export function saveLocal(reducer: ActionReducer<any>): ActionReducer<any> {
-//     const storage = new Storage(localStorageConfig);
-//     const logger = new LoggerService();
-//     return (state, action) => {
-//         // FIXME: Can I save JSON ?
-//         // const stringState = JSON.stringify(state);
-//         storage.set('state', state).then(() => {
-//             logger.log('local state updated');
-//         });
-
-//         return reducer(state, action);
-//     };
-// }
 
 export const metaReducers: MetaReducer<any>[] = [
     // devToolsEnhancer,
@@ -82,7 +60,7 @@ export const metaReducers: MetaReducer<any>[] = [
 ];
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, LoggerServiceComponent],
     entryComponents: [],
     imports: [
         BrowserModule,

@@ -4,7 +4,7 @@ import { MediaType } from 'src/app/components/gallery/MediaType';
 import { SettingsService } from 'src/app/services/settings.service';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.state';
-import { Preferences } from 'src/app/models/ngx-store/Preferences.model';
+import { PreferencesReducerState } from 'src/app/models/ngx-store/Preferences.model';
 
 @Component({
   selector: 'app-image-viewer',
@@ -20,7 +20,7 @@ export class ImageViewerPage implements OnInit {
 
     constructor(private activatedRoute: ActivatedRoute, private settings: SettingsService, private store: Store<AppState>) {
         // this.getSettings();
-        store.select('preferences').subscribe((preferences: Preferences) => {
+        store.select('preferences').subscribe((preferences: PreferencesReducerState) => {
             this.muted = preferences.settings.videoMuted;
         });
         this.getParams();

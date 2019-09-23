@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SettingsService } from 'src/app/services/settings.service';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.state';
-import { Preferences } from 'src/app/models/ngx-store/Preferences.model';
+import { PreferencesReducerState } from 'src/app/models/ngx-store/Preferences.model';
 import { GallerySize } from 'src/app/models/ngx-store/GallerySize.type';
 import { Settings } from 'src/app/models/ngx-store/Settings.model';
 import { ChangeSettings } from 'src/app/ngx-store/actions/preferences.action';
@@ -21,7 +21,7 @@ export class SettingsComponent implements OnInit {
     // public muted: boolean;
 
     constructor(private store: Store<AppState>) {
-        this.store.select('preferences').subscribe((state: Preferences) => {
+        this.store.select('preferences').subscribe((state: PreferencesReducerState) => {
             if (state !== null && state !== undefined) {
                 // this.nsfwSub = state.settings.nsfw;
                 // this.gallerySize = state.settings.gallerySize;

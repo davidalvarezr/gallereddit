@@ -1,8 +1,8 @@
 import * as PreferencesActions from '../actions/preferences.action';
 import * as AppActions from '../actions/app.action';
-import { Preferences } from 'src/app/models/ngx-store/Preferences.model';
+import { PreferencesReducerState } from 'src/app/models/ngx-store/Preferences.model';
 
-const initState: Preferences = {
+const initState: PreferencesReducerState = {
     settings: {
         gallerySize: 'small',
         nsfw: false,
@@ -14,8 +14,12 @@ const initState: Preferences = {
     }
 };
 
-export function preferencesReducer(state: Preferences =  initState, action: PreferencesActions.Actions | AppActions.Actions): Preferences {
-    switch (action.type) {
+export function preferencesReducer(
+        state: PreferencesReducerState =  initState,
+        action: PreferencesActions.Actions | AppActions.Actions
+    ): PreferencesReducerState {
+
+        switch (action.type) {
         case PreferencesActions.CHANGE_SETTINGS:
             return {
                 ...state,

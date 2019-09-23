@@ -8,7 +8,7 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { LoggerService } from 'src/app/services/logger.service';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.state';
-import { Preferences } from 'src/app/models/ngx-store/Preferences.model';
+import { PreferencesReducerState } from 'src/app/models/ngx-store/Preferences.model';
 
 @Component({
   selector: 'app-gallery',
@@ -33,7 +33,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
         //     .then(gallerySize => {
         //         this.gallerySize = gallerySize;
         //     });
-        store.select('preferences').subscribe((preferences: Preferences) => {
+        store.select('preferences').subscribe((preferences: PreferencesReducerState) => {
             this.gallerySize = preferences.settings.gallerySize;
         });
     }
