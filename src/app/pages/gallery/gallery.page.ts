@@ -4,6 +4,7 @@ import { EventsService } from 'src/app/services/events.service';
 import { Subscription } from 'rxjs';
 import { SortService } from 'src/app/services/sort.service';
 import { DrawerComponent } from 'src/app/components/menus/drawer/drawer.component';
+import { LoggerService } from 'src/app/services/logger.service';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class GalleryPage implements OnInit, OnDestroy {
     @ViewChild(DrawerComponent, { static: false }) menu: DrawerComponent;
 
     constructor(
+        private logger: LoggerService,
         public redditService: RedditService,
         private events: EventsService,
         private sortService: SortService
@@ -35,7 +37,7 @@ export class GalleryPage implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log(`GalleryPage initialized`);
+        this.logger.log(`GalleryPage initialized`);
         this.nsfwSubscription = this.events.nsfwObservable().subscribe(nsfw => {
             this.onSettingNsfwValueChanged(nsfw);
         });
@@ -60,17 +62,14 @@ export class GalleryPage implements OnInit, OnDestroy {
     }
 
     private onSettingNsfwValueChanged(nsfw: boolean) {
-        console.log('GalleryPage Receiving notification : NSFW : ' + nsfw);
         this.searchSubs();
     }
 
     private onSortValueChanged(sort: string) {
-        console.log(`onSortValueChanged sort: ${sort}`);
         this.sort = sort;
     }
 
     private onSortTimeValueChanged(sortTime: string) {
-        console.log(`onSortTimeValueChanged sortTime: ${sortTime}`);
         this.sortTime = sortTime;
     }
 

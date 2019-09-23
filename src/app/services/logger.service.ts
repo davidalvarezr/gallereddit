@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class LoggerService {
 
     active = true;
+    activeStore = true;
 
     constructor() { }
 
@@ -34,7 +35,7 @@ export class LoggerService {
     }
 
     storeInfo(what, json) {
-        if (this.active) {
+        if (this.activeStore) {
             const css = 'background: #bde3ff; color: #004980';
             console.log(`%c${what}:`, css);
             console.log(json);

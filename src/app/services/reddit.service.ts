@@ -8,6 +8,7 @@ import { LoadingController } from '@ionic/angular';
 import { ResolveEnd } from '@angular/router';
 import { SettingsService } from './settings.service';
 import { SortService } from './sort.service';
+import { LoggerService } from './logger.service';
 
 const TIME_OF_VALIDITY = 3600000;
 const LIMIT = 25;
@@ -35,6 +36,7 @@ export class RedditService {
     mediaList: Media[];
 
     constructor(
+        private logger: LoggerService,
         private http: HTTP,
         private uniqueDeviceID: UniqueDeviceID,
         public loadingController: LoadingController,
@@ -63,14 +65,14 @@ export class RedditService {
             this.needNewToken = this.timeBeforeRefreshing < 60000;
         }, 60000);
 
-        setInterval(() => {
-            console.log(`Current subreddit: ${this.currentSub}`);
-        }, 2000);
+        // setInterval(() => {
+        //     this.logger.log(`Current subreddit: ${this.currentSub}`);
+        // }, 20000);
   }
 
     // make a request to get a new token
     private refreshToken(): Promise<string> {
-        console.log('Refreshing token...');
+        this.logger.log('Refreshing token...');
         return new Promise((resolve, reject) => {
             this.needNewToken = false;
             // Headers
@@ -117,30 +119,29 @@ export class RedditService {
             this.http.post(SEARCH_SUB_ROUTE, body, {Authorization: `Bearer ${this.token}`})
                 .then((res) => {
                     const data = JSON.parse(res.data);
-                    console.log(`DATA: ${JSON.stringify(data)}`);
                     this.subFound = data.names;
                 })
                 .catch((err) => {
                     console.error(`ERROR: ${JSON.stringify(err)}`);
                 });
         } catch (err) {
-            console.log(err);
+            this.logger.err(err);
         }
     }
 
     checkToken() {
         return new Promise(async (resolve, reject) => {
-            console.log(`Time before asking a new token (in seconds): ${this.timeBeforeRefreshing / 1000}`);
+            this.logger.log(`Time before asking a new token (in seconds): ${this.timeBeforeRefreshing / 1000}`);
 
             let token;
 
             try {
                 if (this.needNewToken) {
                     token = await this.refreshToken();
-                    console.log(`Token has been refreshed: ${token}`);
+                    this.logger.log(`Token has been refreshed: ${token}`);
                 }
             } catch (err) {
-                console.log(`An error occured while refreshing the token: ${err}`);
+                this.logger.err(`An error occured while refreshing the token: ${err}`);
                 reject(err);
             }
 
@@ -174,7 +175,7 @@ export class RedditService {
             ]);
 
             const endpoint = `${SUB_ROUTE}/r/${this.currentSub}/${sort}?raw_json=1`;
-            console.log(`${endpoint}&after=${this.after}`);
+            this.logger.log(`${endpoint}&after=${this.after}`);
             const body = {
                 t: `${sortTime}`,
                 limit: `${LIMIT}`,
@@ -189,12 +190,10 @@ export class RedditService {
             }
             const parsedData = JSON.parse(res.data);
             const posts = parsedData.data.children;
-                // console.log(`ALL POSTS: ${JSON.stringify(posts)}`);
             posts.forEach((post, index) => {
                 const media = post.data.hasOwnProperty('crosspost_parent_list')
                     ? Media.fromJSON(post.data.crosspost_parent_list[0])
                     : Media.fromJSON(post.data);
-                // console.log(`post ${index}: ${JSON.stringify(post)}`);
                 if (media) {
                     this.mediaList.push(media);
                 }
@@ -232,7 +231,7 @@ export class RedditService {
           });
         await this.loader.present();
         const onDismiss = await this.loader.onDidDismiss();
-        // console.log('Loading dismissed! ' + JSON.stringify(onDismiss));
+        // this.logger.log('Loading dismissed! ' + JSON.stringify(onDismiss));
     }
 
     hideLoader() {

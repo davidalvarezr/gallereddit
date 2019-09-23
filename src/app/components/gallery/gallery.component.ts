@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { EventsService } from 'src/app/services/events.service';
 import { Subscription } from 'rxjs';
 import { SettingsService } from 'src/app/services/settings.service';
+import { LoggerService } from 'src/app/services/logger.service';
 
 @Component({
   selector: 'app-gallery',
@@ -18,6 +19,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
     gallerySize: 'small'|'medium';
 
     constructor(
+        private logger: LoggerService,
         public redditService: RedditService,
         private router: Router,
         private events: EventsService,
@@ -30,7 +32,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log(`GalleryComponent initialized`);
+        this.logger.log(`GalleryComponent initialized`);
         this.nsfwSubscription = this.events.nsfwObservable().subscribe((nsfw) => {
             this.onSettingNsfwValueChanged(nsfw);
         });
@@ -43,34 +45,30 @@ export class GalleryComponent implements OnInit, OnDestroy {
     }
 
     openImage(media: Media) {
-        console.log(`Clicked on image ${media}`);
+        this.logger.log(`Clicked on image ${media}`);
         this.router.navigate(['/image-viewer/'], );
     }
 
     async loadData(event): Promise<any> {
-        // console.log('Begin async operation');
         const status = await this.redditService.loadMoreThumbnails();
         event.target.complete();
         if (status === -1) {
             event.target.disable = true;
         }
-        // console.log('Async operation has ended');
     }
 
     onSettingNsfwValueChanged(nsfw: boolean) {
-        // console.log('Receiving notification');
         if (!nsfw) {
             this.redditService.resetMediaList();
         }
     }
 
     onSettingGallerySizeChanged(newGallerySize: 'small'|'medium') {
-        console.log('Gallery size has changed');
         this.gallerySize = newGallerySize;
     }
 
     thumbClick(media: Media) {
-        console.log(media.mediaUrl);
-        console.log(media.type);
+        this.logger.log(media.mediaUrl);
+        this.logger.log(media.type);
     }
 }

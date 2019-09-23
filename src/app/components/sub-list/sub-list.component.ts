@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angu
 import { RedditService } from 'src/app/services/reddit.service';
 import { Observable, Subscription } from 'rxjs';
 import { EventsService } from 'src/app/services/events.service';
+import { LoggerService } from 'src/app/services/logger.service';
 
 @Component({
   selector: 'app-sub-list',
@@ -14,12 +15,12 @@ export class SubListComponent implements OnInit, OnDestroy {
 
     nsfwSubscription: Subscription;
 
-    constructor(private redditService: RedditService, private events: EventsService) {
+    constructor(private logger: LoggerService, private redditService: RedditService, private events: EventsService) {
         this.subList = [];
     }
 
     ngOnInit() {
-        console.log(`SubListComponent initialized`);
+        this.logger.log(`SubListComponent initialized`);
         this.nsfwSubscription = this.events.nsfwObservable().subscribe((nsfw) => {
             this.onSettingNsfwValueChanged(nsfw);
         });
@@ -30,7 +31,6 @@ export class SubListComponent implements OnInit, OnDestroy {
 
 
     private onSettingNsfwValueChanged(nsfw: boolean) {
-        // console.log('SubListComponent Receiving notification');
         if (!nsfw) {
             // delete text in search bar
             this.subList = [];

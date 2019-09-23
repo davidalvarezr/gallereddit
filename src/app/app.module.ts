@@ -10,15 +10,37 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
-import { IonicStorageModule } from '@ionic/storage';
-import { StoreModule, MetaReducer, ActionReducer } from '@ngrx/store';
+import { IonicStorageModule, Storage, StorageConfig } from '@ionic/storage';
+import { StoreModule, MetaReducer, ActionReducer, Action } from '@ngrx/store';
 import { layoutReducer } from './ngx-store/reducers/layout.reducer';
 import { environment } from '../environments/environment'; // Angular CLI environment
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 // import devToolsEnhancer from 'remote-redux-devtools';
 import { StoreRouterConnectingModule, routerReducer } from '@ngrx/router-store';
 import { LoggerService } from './services/logger.service';
+import { preferencesReducer } from './ngx-store/reducers/preferences.reducer';
 
+const localStorageConfig: StorageConfig = {
+    name: '__mydb',
+    driverOrder: ['indexeddb', 'sqlite', 'websql']
+};
+
+const initState = {
+    layout: layoutReducer,
+    preferences: preferencesReducer,
+    router: routerReducer,
+};
+
+function appReducer(state = initState, action: Action) {
+    console.log('INSIDE MAIN REDUCER');
+    return state;
+}
+
+const reducers = {
+    layout: layoutReducer,
+    preferences: preferencesReducer,
+    router: routerReducer,
+};
 
 // console.log all actions
 export function debug(reducer: ActionReducer<any>): ActionReducer<any> {
@@ -30,8 +52,29 @@ export function debug(reducer: ActionReducer<any>): ActionReducer<any> {
 
         return reducer(state, action);
     };
-  }
+}
 
+export function storeReplacer(reducer: ActionReducer<any>): ActionReducer<any> {
+
+    return (state, action) => {
+        return reducer(state, action);
+    };
+}
+
+// TODO: create meta reducer to save preferences in local storage
+// export function saveLocal(reducer: ActionReducer<any>): ActionReducer<any> {
+//     const storage = new Storage(localStorageConfig);
+//     const logger = new LoggerService();
+//     return (state, action) => {
+//         // FIXME: Can I save JSON ?
+//         // const stringState = JSON.stringify(state);
+//         storage.set('state', state).then(() => {
+//             logger.log('local state updated');
+//         });
+
+//         return reducer(state, action);
+//     };
+// }
 
 export const metaReducers: MetaReducer<any>[] = [
     // devToolsEnhancer,
@@ -46,14 +89,8 @@ export const metaReducers: MetaReducer<any>[] = [
         IonicModule.forRoot(),
         AppRoutingModule,
         HttpClientModule,
-        IonicStorageModule.forRoot({
-            name: '__mydb',
-            driverOrder: ['indexeddb', 'sqlite', 'websql']
-        }),
-        StoreModule.forRoot({       // ngx-store
-            layout: layoutReducer,
-            router: routerReducer,
-        }, { metaReducers }),
+        IonicStorageModule.forRoot(localStorageConfig),
+        StoreModule.forRoot(reducers, { metaReducers }),
         StoreRouterConnectingModule.forRoot(), // Connects RouterModule with StoreModule
         StoreDevtoolsModule.instrument({
             maxAge: 25, // Retains last 25 states

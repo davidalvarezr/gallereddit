@@ -44,11 +44,9 @@ export class DrawerComponent implements OnInit, AfterViewInit {
 
     openMenu() {
         this.store.dispatch(new LayoutActions.OpenMenu());
-        console.log('Menu opened');
     }
 
     closeMenu() {
         this.store.dispatch(new LayoutActions.CloseMenu());
-        console.log('Menu closed');
     }
 }
