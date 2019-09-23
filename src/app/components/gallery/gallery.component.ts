@@ -6,6 +6,9 @@ import { EventsService } from 'src/app/services/events.service';
 import { Subscription } from 'rxjs';
 import { SettingsService } from 'src/app/services/settings.service';
 import { LoggerService } from 'src/app/services/logger.service';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/app.state';
+import { Preferences } from 'src/app/models/ngx-store/Preferences.model';
 
 @Component({
   selector: 'app-gallery',
@@ -23,25 +26,29 @@ export class GalleryComponent implements OnInit, OnDestroy {
         public redditService: RedditService,
         private router: Router,
         private events: EventsService,
-        private settings: SettingsService
+        private settings: SettingsService,
+        private store: Store<AppState>
     ) {
-        this.settings.getGallerySize()
-            .then(gallerySize => {
-                this.gallerySize = gallerySize;
-            });
+        // this.settings.getGallerySize()
+        //     .then(gallerySize => {
+        //         this.gallerySize = gallerySize;
+        //     });
+        store.select('preferences').subscribe((preferences: Preferences) => {
+            this.gallerySize = preferences.settings.gallerySize;
+        });
     }
 
     ngOnInit() {
         this.logger.log(`GalleryComponent initialized`);
-        this.nsfwSubscription = this.events.nsfwObservable().subscribe((nsfw) => {
-            this.onSettingNsfwValueChanged(nsfw);
-        });
-        this.gallerySizeSubscription = this.events.gallerySizeObservable().subscribe((newGallerySize) => {
-            this.onSettingGallerySizeChanged(newGallerySize);
-        });
+        // this.nsfwSubscription = this.events.nsfwObservable().subscribe((nsfw) => {
+        //     this.onSettingNsfwValueChanged(nsfw);
+        // });
+        // this.gallerySizeSubscription = this.events.gallerySizeObservable().subscribe((newGallerySize) => {
+        //     this.onSettingGallerySizeChanged(newGallerySize);
+        // });
     }
     ngOnDestroy() {
-        this.nsfwSubscription.unsubscribe();
+        // this.nsfwSubscription.unsubscribe();
     }
 
     openImage(media: Media) {
