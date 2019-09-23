@@ -9,6 +9,10 @@ import { ResolveEnd } from '@angular/router';
 import { SettingsService } from './settings.service';
 import { SortService } from './sort.service';
 import { LoggerService } from './logger.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../app.state';
+import { Preferences, Sort } from '../models/ngx-store/Preferences.model';
+import { Settings } from '../models/ngx-store/Settings.model';
 
 const TIME_OF_VALIDITY = 3600000;
 const LIMIT = 25;
@@ -29,6 +33,8 @@ export class RedditService {
     private after: string;
     private count: number;
     private firstRefresh: boolean;
+    private settingss: Settings;
+    private sortt: Sort;
 
     loader: any;
     currentSub: string;
@@ -41,7 +47,8 @@ export class RedditService {
         private uniqueDeviceID: UniqueDeviceID,
         public loadingController: LoadingController,
         private settings: SettingsService,
-        private sort: SortService
+        private sort: SortService,
+        private store: Store<AppState>
     ) {
         this.timeBeforeRefreshing = 0;
         this.needNewToken = true;
@@ -68,6 +75,16 @@ export class RedditService {
         // setInterval(() => {
         //     this.logger.log(`Current subreddit: ${this.currentSub}`);
         // }, 20000);
+
+        this.store.select('preferences').subscribe((state: Preferences) => {
+            if (state !== null && state !== undefined) {
+                // this.nsfwSub = state.settings.nsfw;
+                // this.gallerySize = state.settings.gallerySize;
+                // this.muted = state.settings.videoMuted;
+                this.settingss = state.settings;
+                this.sortt = state.sort;
+            }
+        });
   }
 
     // make a request to get a new token
@@ -107,11 +124,11 @@ export class RedditService {
     async searchSubs(query = null) {
         try {
             await this.checkToken();
-            const over18 = await this.settings.getNsfwSub();
+            // const over18 = await this.settings.getNsfwSub();
 
             const body = {
                 exact: false,
-                include_over_18: over18,
+                include_over_18: this.settingss.nsfw,
                 include_advertisable: true,
                 query,
             };

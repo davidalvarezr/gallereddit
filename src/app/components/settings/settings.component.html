@@ -5,13 +5,13 @@
         <ion-label>
             NSFW
         </ion-label>
-        <ion-toggle [(ngModel)]="nsfwSub" (ionChange)="setNsfwSub()"></ion-toggle>
+        <ion-toggle [checked]="settings.nsfw" (ionChange)="setNsfwSub($event)"></ion-toggle>
     </ion-item> 
 
     <ion-item>
         <ion-icon name="resize" slot="start"></ion-icon>
         <ion-label position="floating">Gallery size</ion-label>
-        <ion-select [(ngModel)]="gallerySize" (ionChange)="setGallerySize()" interface="popover">
+        <ion-select [value]="settings.gallerySize" (ionChange)="setGallerySize($event)" interface="popover">
             <ion-select-option value="small">small</ion-select-option>
             <ion-select-option value="medium">medium</ion-select-option>
         </ion-select>
@@ -22,7 +22,7 @@
         <ion-label>
             Videos are muted
         </ion-label>
-        <ion-toggle [(ngModel)]="muted" (ionChange)="changeMuted()"></ion-toggle>
+        <ion-toggle [checked]="settings.videoMuted" (ionChange)="changeMuted($event)"></ion-toggle>
     </ion-item>
 
 </ion-list>
