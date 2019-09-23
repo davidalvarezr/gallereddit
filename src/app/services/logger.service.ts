@@ -12,17 +12,7 @@ export class LoggerService {
     active = true;
     activeStore = true;
 
-    constructor(private store: Store<AppState>) {
-
-    }
-
-    static getInstance(): LoggerService {
-        if (this.instance !== null) {
-            return this.instance;
-        } else {
-            this.instance = new LoggerService()
-        }
-    }
+    constructor(private store: Store<AppState>) {}
 
     log(text) {
         if (this.active) {

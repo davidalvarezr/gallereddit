@@ -20,7 +20,6 @@ export class DrawerComponent implements OnInit, AfterViewInit {
 
     constructor(private menuController: MenuController, private store: Store<AppState>) {
         store.select('layout').subscribe((layout) => {
-            // console.log(`layout: ${layout}`);
             if (layout === null || layout === undefined) { return; }
             this.menuOpen = layout.menuOpen;
 
@@ -32,7 +31,6 @@ export class DrawerComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         // Manually open/close menu (to see if it works in ngrx dev-tool)
         this.store.select('layout').subscribe((layout) => {
-            // console.log(`layout: ${layout}`);
             if (layout === null || layout === undefined) { return; }
             this.menu.setOpen(layout.menuOpen);
         });

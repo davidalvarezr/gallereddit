@@ -11,7 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { IonicStorageModule, Storage, StorageConfig } from '@ionic/storage';
-import { StoreModule, MetaReducer, ActionReducer, Action } from '@ngrx/store';
+import { StoreModule, MetaReducer, ActionReducer, META_REDUCERS } from '@ngrx/store';
 import { layoutReducer } from './ngx-store/reducers/layout.reducer';
 import { environment } from '../environments/environment'; // Angular CLI environment
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -22,7 +22,7 @@ import { preferencesReducer } from './ngx-store/reducers/preferences.reducer';
 import { debugReducer } from './ngx-store/reducers/debug.reducer';
 import { LoggerServiceComponent } from './components/logger-service/logger-service.component';
 import { AppState, Actions } from './app.state';
-
+// import * as fromRoot from './ngx-store/reducers';
 
 const localStorageConfig: StorageConfig = {
     name: '__mydb',
@@ -36,31 +36,34 @@ const reducers = {
     debug: debugReducer,
 };
 
-// FIXME:
 /**
- * console.log action and state(before action) each time an action is dipatched
- * @param reducer reducer
+ * Injects a `LoggerService` inside a `MetaReducer`
+ * @param logger a service that allows to log and store console.log() messages
+ * @returns a `MetaReducer`
  */
-export function debug(reducer: ActionReducer<AppState, Actions>): ActionReducer<AppState, Actions> {
+function debugFactory(logger: LoggerService): MetaReducer<AppState> {
+    return (reducer: ActionReducer<AppState, Actions>): ActionReducer<AppState, Actions> => {
+        return (state, action) => {
 
-    // const logger = new LoggerService(); // ERROR [1]
+           logger.storeInfo('ACTION', action);
+           logger.storeInfo('STATE', state);
 
-    return (state, action) => {
-
-        // logger.storeInfo('ACTION', action);
-        // logger.storeInfo('STATE', state);
-
-        return reducer(state, action);
+           return reducer(state, action);
+        };
     };
 }
 
-export const metaReducers: MetaReducer<any>[] = [
-    // devToolsEnhancer,
-    debug
-];
+/**
+ * Injects a LoggerService inside the debug `MetaReducer` function
+ * @param logger a service that allows to log and store console.log() messages
+ * @returns A list of `MetaReducer`
+ */
+export function getMetaReducers(logger: LoggerService): MetaReducer<AppState>[] {
+    return [debugFactory(logger)];
+}
 
 @NgModule({
-    declarations: [AppComponent, LoggerServiceComponent],
+    declarations: [AppComponent ],
     entryComponents: [],
     imports: [
         BrowserModule,
@@ -68,7 +71,7 @@ export const metaReducers: MetaReducer<any>[] = [
         AppRoutingModule,
         HttpClientModule,
         IonicStorageModule.forRoot(localStorageConfig),
-        StoreModule.forRoot(reducers, { metaReducers }),
+        StoreModule.forRoot(reducers), // FIXME: { metaReducers }
         StoreRouterConnectingModule.forRoot(), // Connects RouterModule with StoreModule
         StoreDevtoolsModule.instrument({
             maxAge: 25, // Retains last 25 states
@@ -81,7 +84,13 @@ export const metaReducers: MetaReducer<any>[] = [
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
         HTTP,
         UniqueDeviceID,
-        PhotoViewer
+        PhotoViewer,
+        // {
+        //     provide: META_REDUCERS,
+        //     deps: [LoggerService],
+        //     useFactory: getMetaReducers,
+        //     multi: true,
+        // },
     ],
     bootstrap: [AppComponent],
 })
