@@ -3,7 +3,7 @@ import * as DebugActions from '../actions/debug.action';
 import * as AppActions from '../actions/app.action';
 
 const initState: DebugReducerState = {
-    messages: [{content: 'lol', type: 'log'}]
+    messages: []
 };
 
 export function debugReducer(state: DebugReducerState = initState, action: DebugActions.Actions | AppActions.Actions): DebugReducerState {

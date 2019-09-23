@@ -5,6 +5,10 @@ import { Subscription } from 'rxjs';
 import { SortService } from 'src/app/services/sort.service';
 import { DrawerComponent } from 'src/app/components/menus/drawer/drawer.component';
 import { LoggerService } from 'src/app/services/logger.service';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/app.state';
+import { PreferencesReducerState, Sort } from 'src/app/models/ngx-store/Preferences.model';
+import { ChangeSort, ChangeSortTime } from 'src/app/ngx-store/actions/preferences.action';
 
 
 @Component({
@@ -12,7 +16,7 @@ import { LoggerService } from 'src/app/services/logger.service';
   templateUrl: './gallery.page.html',
   styleUrls: ['./gallery.page.scss']
 })
-export class GalleryPage implements OnInit, OnDestroy {
+export class GalleryPage implements OnInit {
 
     private nsfwSubscription: Subscription;
     private sortSubscription: Subscription;
@@ -21,8 +25,8 @@ export class GalleryPage implements OnInit, OnDestroy {
     searchTerm: string;
     title: string;
     contentToShow: string; // gallery | sub_list
-    sort: string;
-    sortTime: string;
+    sort: Sort;
+
 
     @ViewChild(DrawerComponent, { static: false }) menu: DrawerComponent;
 
@@ -30,47 +34,22 @@ export class GalleryPage implements OnInit, OnDestroy {
         private logger: LoggerService,
         public redditService: RedditService,
         private events: EventsService,
-        private sortService: SortService
+        private sortService: SortService,
+        private store: Store<AppState>
     ) {
         this.contentToShow = 'gallery';
-        this.loadSort();
+        store.select('preferences').subscribe((preferencesState) => {
+            this.sort = preferencesState.sort;
+        });
     }
 
     ngOnInit() {
         this.logger.log(`GalleryPage initialized`);
-        this.nsfwSubscription = this.events.nsfwObservable().subscribe(nsfw => {
-            this.onSettingNsfwValueChanged(nsfw);
-        });
-        this.sortSubscription = this.events.sortObservable().subscribe(sort => {
-            this.onSortValueChanged(sort);
-        });
-        this.sortTimeSubscription = this.events.sortTimeObservable().subscribe(sortTime => {
-            this.onSortTimeValueChanged(sortTime);
-        });
-    }
-    ngOnDestroy() {
-        this.nsfwSubscription.unsubscribe();
-        this.sortSubscription.unsubscribe();
-        this.sortTimeSubscription.unsubscribe();
     }
 
-    private async loadSort() {
-        [this.sort, this.sortTime] = await Promise.all([
-            this.sortService.getSort(),
-            this.sortService.getSortTime()
-        ]);
-    }
 
     private onSettingNsfwValueChanged(nsfw: boolean) {
         this.searchSubs();
-    }
-
-    private onSortValueChanged(sort: string) {
-        this.sort = sort;
-    }
-
-    private onSortTimeValueChanged(sortTime: string) {
-        this.sortTime = sortTime;
     }
 
     searchSubs() {
@@ -91,18 +70,16 @@ export class GalleryPage implements OnInit, OnDestroy {
         this.title = sub;
     }
 
-    async changeSort() {
-        await this.sortService.setSort(this.sort);
-        this.redditService.resetMediaList();
-        this.redditService.loadMoreThumbnails();
-        this.events.notifySortHasChanged(this.sort);
+    async changeSort($event) {
+        this.store.dispatch(new ChangeSort($event.detail.value));
+        // this.redditService.resetMediaList();
+        // this.redditService.loadMoreThumbnails();
     }
 
-    async changeSortTime() {
-        await this.sortService.setSortTime(this.sortTime);
-        this.redditService.resetMediaList();
-        this.redditService.loadMoreThumbnails();
-        this.events.notifySortTimeHasChanged(this.sortTime);
+    async changeSortTime($event) {
+        this.store.dispatch(new ChangeSortTime($event.detail.value));
+        // this.redditService.resetMediaList();
+        // this.redditService.loadMoreThumbnails();
     }
 
 }

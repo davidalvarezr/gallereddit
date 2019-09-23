@@ -13,6 +13,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../app.state';
 import { PreferencesReducerState, Sort } from '../models/ngx-store/Preferences.model';
 import { Settings } from '../models/ngx-store/Settings.model';
+import * as fromPreferencesReducer from '../ngx-store/reducers/preferences.reducer';
 
 const TIME_OF_VALIDITY = 3600000;
 const LIMIT = 25;
@@ -33,8 +34,8 @@ export class RedditService {
     private after: string;
     private count: number;
     private firstRefresh: boolean;
-    private settingss: Settings;
-    private sortt: Sort;
+    private settings: Settings = fromPreferencesReducer.initState.settings;
+    private sort: Sort = fromPreferencesReducer.initState.sort;
 
     loader: any;
     currentSub: string;
@@ -46,8 +47,6 @@ export class RedditService {
         private http: HTTP,
         private uniqueDeviceID: UniqueDeviceID,
         public loadingController: LoadingController,
-        private settings: SettingsService,
-        private sort: SortService,
         private store: Store<AppState>
     ) {
         this.timeBeforeRefreshing = 0;
@@ -72,17 +71,19 @@ export class RedditService {
             this.needNewToken = this.timeBeforeRefreshing < 60000;
         }, 60000);
 
-        // setInterval(() => {
-        //     this.logger.log(`Current subreddit: ${this.currentSub}`);
-        // }, 20000);
 
-        this.store.select('preferences').subscribe((state: PreferencesReducerState) => {
-            if (state !== null && state !== undefined) {
-                // this.nsfwSub = state.settings.nsfw;
-                // this.gallerySize = state.settings.gallerySize;
-                // this.muted = state.settings.videoMuted;
-                this.settingss = state.settings;
-                this.sortt = state.sort;
+        this.store.select('preferences').subscribe((prefState: PreferencesReducerState) => {
+            if (prefState !== null && prefState !== undefined) {
+                this.settings = prefState.settings;
+                console.log(prefState);
+                if (this.sort.sortTime !== prefState.sort.sortTime
+                        || this.sort.sortType !== prefState.sort.sortType) {
+
+                    // sort has been changed, update thumbnails
+                    this.resetMediaList();
+                    this.getThumbnails();
+                }
+                this.sort = prefState.sort;
             }
         });
   }
@@ -124,11 +125,10 @@ export class RedditService {
     async searchSubs(query = null) {
         try {
             await this.checkToken();
-            // const over18 = await this.settings.getNsfwSub();
 
             const body = {
                 exact: false,
-                include_over_18: this.settingss.nsfw,
+                include_over_18: this.settings.nsfw,
                 include_advertisable: true,
                 query,
             };
@@ -173,7 +173,6 @@ export class RedditService {
             while (this.mediaList.length < MIN_NUM_TO_BE_LOADED && this.after !== null) {
                 await this.getThumbnails();
             }
-            // this.after = '';
             this.firstRefresh = false;
         } catch (err) {
             console.error(`ERROR: ${err}`);
@@ -186,15 +185,11 @@ export class RedditService {
                 this.showLoader();
             }
 
-            const [sort, sortTime] = await Promise.all([
-                this.sort.getSort(),
-                this.sort.getSortTime()
-            ]);
 
-            const endpoint = `${SUB_ROUTE}/r/${this.currentSub}/${sort}?raw_json=1`;
+            const endpoint = `${SUB_ROUTE}/r/${this.currentSub}/${this.sort.sortType}?raw_json=1`;
             this.logger.log(`${endpoint}&after=${this.after}`);
             const body = {
-                t: `${sortTime}`,
+                t: `${this.sort.sortTime}`,
                 limit: `${LIMIT}`,
                 count: `${this.count}`,
                 after: `${this.after}`,
@@ -248,7 +243,6 @@ export class RedditService {
           });
         await this.loader.present();
         const onDismiss = await this.loader.onDidDismiss();
-        // this.logger.log('Loading dismissed! ' + JSON.stringify(onDismiss));
     }
 
     hideLoader() {
