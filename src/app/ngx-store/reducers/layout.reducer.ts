@@ -20,8 +20,10 @@ export function layoutReducer(
             case LayoutActions.THUMBNAILS_LOADED:
                 return { ...state, gallery: [...state.gallery, ...action.payload] };
             case AppActions.APP_INIT:
-                return action.payload.layout;
-
+                return action.payload !== null
+                    && action.payload !== undefined
+                    ? action.payload.layout
+                    : initState;
             default:
                 return state;
     }

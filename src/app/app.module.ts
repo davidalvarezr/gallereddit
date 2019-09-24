@@ -11,7 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { IonicStorageModule, Storage, StorageConfig } from '@ionic/storage';
-import { StoreModule, MetaReducer, ActionReducer, META_REDUCERS } from '@ngrx/store';
+import { StoreModule, MetaReducer, ActionReducer, META_REDUCERS, USER_PROVIDED_META_REDUCERS } from '@ngrx/store';
 import { layoutReducer } from './ngx-store/reducers/layout.reducer';
 import { environment } from '../environments/environment'; // Angular CLI environment
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -62,6 +62,7 @@ export function getMetaReducers(logger: LoggerService): MetaReducer<AppState>[] 
     return [debugFactory(logger)];
 }
 
+
 @NgModule({
     declarations: [AppComponent ],
     entryComponents: [],
@@ -85,12 +86,11 @@ export function getMetaReducers(logger: LoggerService): MetaReducer<AppState>[] 
         HTTP,
         UniqueDeviceID,
         PhotoViewer,
-        // {
-        //     provide: META_REDUCERS,
-        //     deps: [LoggerService],
-        //     useFactory: getMetaReducers,
-        //     multi: true,
-        // },
+        {
+            provide: USER_PROVIDED_META_REDUCERS,
+            deps: [LoggerService],
+            useFactory: getMetaReducers,
+        },
     ],
     bootstrap: [AppComponent],
 })
