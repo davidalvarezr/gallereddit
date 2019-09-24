@@ -14,6 +14,7 @@ import { AppState } from '../app.state';
 import { PreferencesReducerState, Sort } from '../models/ngx-store/Preferences.model';
 import { Settings } from '../models/ngx-store/Settings.model';
 import * as fromPreferencesReducer from '../ngx-store/reducers/preferences.reducer';
+import { LoadThumbnails } from '../ngx-store/actions/layout.action';
 
 const TIME_OF_VALIDITY = 3600000;
 const LIMIT = 25;
@@ -75,7 +76,7 @@ export class RedditService {
         this.store.select('preferences').subscribe((prefState: PreferencesReducerState) => {
             if (prefState !== null && prefState !== undefined) {
                 this.settings = prefState.settings;
-                console.log(prefState);
+                logger.log(prefState);
                 if (this.sort.sortTime !== prefState.sort.sortTime
                         || this.sort.sortType !== prefState.sort.sortType) {
 
@@ -133,7 +134,7 @@ export class RedditService {
                 query,
             };
 
-            this.http.post(SEARCH_SUB_ROUTE, body, {Authorization: `Bearer ${this.token}`})
+            this.http.get(SEARCH_SUB_ROUTE, body, {Authorization: `Bearer ${this.token}`})
                 .then((res) => {
                     const data = JSON.parse(res.data);
                     this.subFound = data.names;
@@ -170,70 +171,76 @@ export class RedditService {
         try {
             await this.checkToken();
             this.currentSub = subName;
-            while (this.mediaList.length < MIN_NUM_TO_BE_LOADED && this.after !== null) {
-                await this.getThumbnails();
-            }
+            // while (this.mediaList.length < MIN_NUM_TO_BE_LOADED && this.after !== null) {
+            //     await this.getThumbnails();
+            // }
+            this.loadMoreThumbnails();
+            // TODO:
+            // this.store.dispatch(new LoadThumbnails());
             this.firstRefresh = false;
         } catch (err) {
             console.error(`ERROR: ${err}`);
         }
     }
 
-    async getThumbnails(): Promise<any> {
-        try {
-
-            if (this.currentSub === undefined) {
-                return;
-            }
-
-            if (this.firstRefresh) {
-                this.showLoader();
-            }
-
-
-            const endpoint = `${SUB_ROUTE}/r/${this.currentSub}/${this.sort.sortType}?raw_json=1`;
-            this.logger.log(`${endpoint}&after=${this.after}`);
-            const body = {
-                t: `${this.sort.sortTime}`,
-                limit: `${LIMIT}`,
-                count: `${this.count}`,
-                after: `${this.after}`,
-            };
-            const auth = {Authorization: `Bearer ${this.token}`};
-
-            const res = await this.http.get(endpoint, body, auth);
-            if (this.firstRefresh) {
-                this.hideLoader();
-            }
-            const parsedData = JSON.parse(res.data);
-            const posts = parsedData.data.children;
-            posts.forEach((post, index) => {
-                const media = post.data.hasOwnProperty('crosspost_parent_list')
-                    ? Media.fromJSON(post.data.crosspost_parent_list[0])
-                    : Media.fromJSON(post.data);
-                if (media) {
-                    this.mediaList.push(media);
-                }
-            });
-            this.count += LIMIT;
-            this.after = parsedData.data.after;
+    /**
+     * Send a request to get some medias from a sub
+     */
+    async getThumbnails(): Promise<Media[]> {
+        if (this.currentSub === undefined) {
             return;
-        } catch (err) {
-            return err;
         }
+        if (this.firstRefresh) {
+            this.showLoader();
+        }
+
+        const endpoint = `${SUB_ROUTE}/r/${this.currentSub}/${this.sort.sortType}?raw_json=1`;
+        this.logger.log(`${endpoint}&after=${this.after}`);
+        const body = {
+            t: `${this.sort.sortTime}`,
+            limit: `${LIMIT}`,
+            count: `${this.count}`,
+            after: `${this.after}`,
+        };
+        const auth = {Authorization: `Bearer ${this.token}`};
+
+        const res = await this.http.get(endpoint, body, auth);
+        if (this.firstRefresh) {
+            this.hideLoader();
+        }
+        const parsedData = JSON.parse(res.data);
+        const posts = parsedData.data.children;
+        posts.forEach((post) => {
+            console.log(post);
+            const media = post.data.hasOwnProperty('crosspost_parent_list')
+                && post.data.crosspost_parent_list.length > 0
+                ? Media.fromJSON(post.data.crosspost_parent_list[0])
+                : Media.fromJSON(post.data);
+            if (media) {
+                this.mediaList.push(media);
+            }
+        });
+        this.count += LIMIT;
+        this.after = parsedData.data.after;
+        return this.mediaList;
     }
 
-    loadMoreThumbnails(): Promise<number> {
+    /**
+     * Calls one or several time `getThumbnails()` until the service
+     * has loaded at least a certain amount of medias
+     */
+    loadMoreThumbnails(): Promise<Media[]> {
         return new Promise(async (resolve, reject) => {
-            if (this.currentSub) {
+            let medias = this.mediaList;
+            if (this.currentSub !== undefined && this.currentSub !== null) {
                 const length = this.mediaList.length;
-                while (this.mediaList.length < length + LIMIT && this.after !== null) {
-                    await this.getThumbnails();
+                while (this.mediaList.length < length + LIMIT
+                        && this.after !== null && this.after !== 'null') {
+
+                    medias = await this.getThumbnails();
                 }
-                resolve(this.after === null ? -1 : 0);
-            } else {
-                resolve(-1);
             }
+            resolve(medias);
         });
     }
 
