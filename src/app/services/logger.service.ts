@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../app.state';
 import { AddMessage } from '../ngx-store/actions/debug.action';
+import { Logger } from '../models/ngx-store/Logger.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoggerService {
+export class LoggerService implements Logger {
 
-    static instance: LoggerService = null;
     active = true;
     activeStore = true;
 
