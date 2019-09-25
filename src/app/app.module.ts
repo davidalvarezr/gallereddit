@@ -10,7 +10,7 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
-import { IonicStorageModule, Storage, StorageConfig } from '@ionic/storage';
+import { IonicStorageModule, StorageConfig } from '@ionic/storage';
 import { StoreModule, MetaReducer, ActionReducer, META_REDUCERS, USER_PROVIDED_META_REDUCERS } from '@ngrx/store';
 import { layoutReducer } from './ngx-store/reducers/layout.reducer';
 import { environment } from '../environments/environment'; // Angular CLI environment
@@ -70,7 +70,7 @@ export function getMetaReducers(logger: LoggerService): MetaReducer<AppState>[] 
         IonicModule.forRoot(),
         AppRoutingModule,
         HttpClientModule,
-        IonicStorageModule.forRoot(localStorageConfig),
+        IonicStorageModule.forRoot(),
         StoreModule.forRoot(reducers), // FIXME: { metaReducers }
         StoreRouterConnectingModule.forRoot(), // Connects RouterModule with StoreModule
         StoreDevtoolsModule.instrument({

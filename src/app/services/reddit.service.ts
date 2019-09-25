@@ -17,6 +17,20 @@ import * as fromPreferencesReducer from '../ngx-store/reducers/preferences.reduc
 import { LoadThumbnails } from '../ngx-store/actions/layout.action';
 import { LoggerDispatcherService } from './logger-dispatcher.service';
 
+/**
+ * Creates and returns an Universally Unique IDentifier
+ * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+ * @returns an Universally Unique IDentifier (UUID)
+ */
+export function uuidv4(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      // tslint:disable-next-line:no-bitwise
+      const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+}
+
+
 const TIME_OF_VALIDITY = 3600000;
 const LIMIT = 25;
 const ACCESS_TOKEN_ROUTE = 'https://www.reddit.com/api/v1/access_token';
@@ -59,9 +73,7 @@ export class RedditService {
         this.firstRefresh = true;
 
         // Determine device id
-        this.uniqueDeviceID.get()
-            .then((uuid: any) => this.deviceId = uuid)
-            .catch((error: any) => console.error(error));
+        this.deviceId = uuidv4();
 
 
         // Each minute, remove 60000ms to the time before refreshing
