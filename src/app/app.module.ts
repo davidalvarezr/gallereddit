@@ -20,7 +20,6 @@ import { StoreRouterConnectingModule, routerReducer } from '@ngrx/router-store';
 import { LoggerService } from './services/logger.service';
 import { preferencesReducer } from './ngx-store/reducers/preferences.reducer';
 import { debugReducer } from './ngx-store/reducers/debug.reducer';
-import { LoggerServiceComponent } from './components/logger-service/logger-service.component';
 import { AppState, Actions } from './app.state';
 // import * as fromRoot from './ngx-store/reducers';
 

@@ -8,6 +8,7 @@ import { Store, select } from '@ngrx/store';
 import { AppState } from 'src/app/app.state';
 import { PreferencesReducerState } from 'src/app/models/ngx-store/Preferences.model';
 import { Observable } from 'rxjs';
+import { LoggerDispatcherService } from 'src/app/services/logger-dispatcher.service';
 
 @Component({
   selector: 'app-gallery',
@@ -20,7 +21,7 @@ export class GalleryComponent implements OnInit {
     gallerySize: 'small'|'medium';
 
     constructor(
-        private logger: LoggerService,
+        private logger: LoggerDispatcherService,
         public redditService: RedditService,
         private router: Router,
         private store: Store<AppState>

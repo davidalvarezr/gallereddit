@@ -15,6 +15,7 @@ import { PreferencesReducerState, Sort } from '../models/ngx-store/Preferences.m
 import { Settings } from '../models/ngx-store/Settings.model';
 import * as fromPreferencesReducer from '../ngx-store/reducers/preferences.reducer';
 import { LoadThumbnails } from '../ngx-store/actions/layout.action';
+import { LoggerDispatcherService } from './logger-dispatcher.service';
 
 const TIME_OF_VALIDITY = 3600000;
 const LIMIT = 25;
@@ -44,7 +45,7 @@ export class RedditService {
     mediaList: Media[];
 
     constructor(
-        private logger: LoggerService,
+        private logger: LoggerDispatcherService,
         private http: HTTP,
         private uniqueDeviceID: UniqueDeviceID,
         public loadingController: LoadingController,
@@ -82,7 +83,7 @@ export class RedditService {
 
                     // sort has been changed, update thumbnails
                     this.resetMediaList();
-                    this.getThumbnails();
+                    this.loadMoreThumbnails();
                 }
                 this.sort = prefState.sort;
             }
@@ -134,7 +135,7 @@ export class RedditService {
                 query,
             };
 
-            this.http.get(SEARCH_SUB_ROUTE, body, {Authorization: `Bearer ${this.token}`})
+            this.http.post(SEARCH_SUB_ROUTE, body, {Authorization: `Bearer ${this.token}`})
                 .then((res) => {
                     const data = JSON.parse(res.data);
                     this.subFound = data.names;
@@ -205,13 +206,13 @@ export class RedditService {
         const auth = {Authorization: `Bearer ${this.token}`};
 
         const res = await this.http.get(endpoint, body, auth);
-        if (this.firstRefresh) {
-            this.hideLoader();
-        }
+
+        this.hideLoader();
+
         const parsedData = JSON.parse(res.data);
         const posts = parsedData.data.children;
         posts.forEach((post) => {
-            console.log(post);
+            // console.log(post);
             const media = post.data.hasOwnProperty('crosspost_parent_list')
                 && post.data.crosspost_parent_list.length > 0
                 ? Media.fromJSON(post.data.crosspost_parent_list[0])

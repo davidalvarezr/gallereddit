@@ -9,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.state';
 import { PreferencesReducerState, Sort } from 'src/app/models/ngx-store/Preferences.model';
 import { ChangeSort, ChangeSortTime } from 'src/app/ngx-store/actions/preferences.action';
+import { LoggerDispatcherService } from 'src/app/services/logger-dispatcher.service';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class GalleryPage implements OnInit {
     @ViewChild(DrawerComponent, { static: false }) menu: DrawerComponent;
 
     constructor(
-        private logger: LoggerService,
+        private logger: LoggerDispatcherService,
         public redditService: RedditService,
         private events: EventsService,
         private sortService: SortService,

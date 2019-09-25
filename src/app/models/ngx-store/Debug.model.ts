@@ -1,9 +1,10 @@
 import { Json } from '../json.model';
+import { Loggable } from './Logger.model';
 
 export type MessageType = 'log' | 'warn' | 'err' | 'store' | 'wtf' | 'json';
 
 export interface Message {
-    content: string | Json;
+    content: Loggable;
     type: MessageType;
 }
 

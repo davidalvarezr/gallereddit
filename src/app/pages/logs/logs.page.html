@@ -7,7 +7,7 @@
 <ion-content>
 
     <ion-list>
-        <ion-item *ngFor="let message of messages">{{ message.content }}</ion-item>
+        <ion-item *ngFor="let message of messages | async">{{ message.content | json }}</ion-item>
     </ion-list>
 
 </ion-content>

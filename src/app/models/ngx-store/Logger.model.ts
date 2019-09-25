@@ -1,16 +1,19 @@
 import { Json } from '../json.model';
+import { Reducers } from 'src/app/app.state';
+
+export type Loggable = boolean | number | string | Json | Reducers;
 
 export interface Logger {
 
-    log(text: string | Json): void;
+    log(text: Loggable): void;
 
     logJSON(json: Json): void;
 
-    warn(text: string | Json): void;
+    warn(text: Loggable): void;
 
-    err(text: string | Json): void;
+    err(text: Loggable): void;
 
-    storeInfo(what: string, json: Json | string): void;
+    storeInfo(what: string, json: Loggable): void;
 
-    wtf(text: string | Json): void;
+    wtf(text: Loggable): void;
 }

@@ -3,6 +3,7 @@ import { RedditService } from 'src/app/services/reddit.service';
 import { Observable, Subscription } from 'rxjs';
 import { EventsService } from 'src/app/services/events.service';
 import { LoggerService } from 'src/app/services/logger.service';
+import { LoggerDispatcherService } from 'src/app/services/logger-dispatcher.service';
 
 @Component({
   selector: 'app-sub-list',
@@ -15,7 +16,7 @@ export class SubListComponent implements OnInit, OnDestroy {
 
     nsfwSubscription: Subscription;
 
-    constructor(private logger: LoggerService, private redditService: RedditService, private events: EventsService) {
+    constructor(private logger: LoggerDispatcherService, private redditService: RedditService, private events: EventsService) {
         this.subList = [];
     }
 
