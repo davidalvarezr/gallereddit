@@ -35,7 +35,6 @@
     "com-sarriaroman-photoviewer": "^1.2.4",
     "cordova-android": "7.1.4",
     "cordova-plugin-advanced-http": "^2.1.1",
-    "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "^4.1.1",
@@ -88,7 +87,6 @@
       },
       "cordova-plugin-whitelist": {},
       "cordova-plugin-statusbar": {},
-      "cordova-plugin-device": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"

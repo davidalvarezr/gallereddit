@@ -11,7 +11,7 @@ export function debugReducer(state: DebugReducerState = initState, action: Debug
         case DebugActions.ADD_MESSAGE:
         // console.log('');
         return {
-                messages: [...state.messages, action.payload]
+                messages: [action.payload, ...state.messages]
             };
         case AppActions.APP_INIT:
             return action.payload.debug;

@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content #content>
 
     <ion-list>
         <ion-item *ngFor="let message of messages | async">{{ message.content | json }}</ion-item>
