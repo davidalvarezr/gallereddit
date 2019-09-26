@@ -51,7 +51,9 @@ export class AppComponent implements OnInit {
         return this.storage.get('state').then((stringState) => {
             const state = JSON.parse(stringState);
             this.store.dispatch(new AppInit(state));
-            this.logger.log(`STATE OF THE APP HAS BEEN INITIALIZED IN NGRX-STORE`);
+            // this.logger.log(`STATE OF THE APP HAS BEEN INITIALIZED IN NGRX-STORE`); <-- infinite dispatch...
+            console.log(`STATE OF THE APP HAS BEEN INITIALIZED IN NGRX-STORE`);
+
         });
     }
 
@@ -65,7 +67,8 @@ export class AppComponent implements OnInit {
                 console.log('STATE PUT IN LOCAL STORAGE');
             })
             .then(() => {
-                this.logger.log(`NGRX-STORE HAS BEEN SAVED IN LOCAL STORAGE`);
+                // this.logger.log(`NGRX-STORE HAS BEEN SAVED IN LOCAL STORAGE`); <-- infinite dispatch...
+                console.log(`NGRX-STORE HAS BEEN SAVED IN LOCAL STORAGE`);
             });
         });
     }
